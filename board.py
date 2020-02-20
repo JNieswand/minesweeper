@@ -183,6 +183,10 @@ class Drawer:
                     self.ax.text(i, j, "F")
         plt.show() 
         self.fig.canvas.draw()
+    def message_win(self):
+        self.ax.set_title("GAME WON!")
+    def message_loose(self):
+        self.ax.set_title("GAME OVER :(")
     def connect_clickevent(self, onclick):
         self.fig.canvas.mpl_connect('button_press_event', onclick)
 class Game:
@@ -193,13 +197,16 @@ class Game:
         self.drawer = Drawer(self.board)
     def update(self):
         if self.board.exploded:
-            print("GAME OVER")
+            self.lost()
             return
         elif (self.board.overlay_mask.get_visible_nr() == self.size *self.size - self.nr_bombs
         and self.board.overlay_mask.get_flagged_nr() == self.nr_bombs):
-            print("GAME WON !!")
-            return
+            self.won()
         self.drawer.draw()
+    def won(self):
+        self.drawer.message_win()
+    def lost(self):
+        self.drawer.message_loose()
 if __name__ == "__main__":
     game = Game()
     player = Player(game.board)
